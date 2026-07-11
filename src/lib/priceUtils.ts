@@ -58,6 +58,31 @@ export function getSizeAdjustedPrice(basePrice: number, size: string): number {
 }
 
 /**
+ * Formats a price for display without forcing trailing zeroes.
+ */
+export function formatPrice(value: number): string {
+  return value.toFixed(2).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
+}
+
+/**
+ * Returns the discount amount between an original price and the current price.
+ */
+export function getMarkdownAmount(originalPrice: number, currentPrice: number): number {
+  return Math.max(0, Math.round((originalPrice - currentPrice) * 100) / 100);
+}
+
+/**
+ * Returns the markdown percentage between an original price and the current price.
+ */
+export function getMarkdownPercent(originalPrice: number, currentPrice: number): number {
+  if (originalPrice <= 0 || currentPrice >= originalPrice) {
+    return 0;
+  }
+
+  return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+}
+
+/**
  * Returns the absolute price difference (positive = markup, negative = discount).
  * e.g. getSizePriceDiff(100, "XL") → 7
  */

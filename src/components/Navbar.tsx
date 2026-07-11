@@ -6,13 +6,13 @@ import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Heart, Search, User, ShieldAlert, X, ChevronRight } from "lucide-react";
+import { ShoppingBag, Heart, Search, User, X, ChevronRight, Sparkles } from "lucide-react";
 
 
 function NavbarContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { cart, wishlist, activeUser, loginMock, logoutMock, setCartDrawerOpen, products, categories, subcategories } = useStore();
+  const { cart, wishlist, activeUser, logoutMock, setCartDrawerOpen, products, categories, subcategories } = useStore();
   
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,13 +30,22 @@ function NavbarContent() {
       ).slice(0, 4)
     : [];
 
-  const handleRoleToggle = (role: "USER" | "ADMIN") => {
-    loginMock(role);
-    setShowProfileMenu(false);
-  };
-
   return (
     <>
+      <div className="w-full px-6 pt-4">
+        <div className="max-w-7xl mx-auto rounded-full border border-[#B8A98F]/20 bg-gradient-to-r from-[#B8A98F]/15 via-[#121212] to-[#F0EFE7]/5 px-4 py-2 text-[9px] uppercase tracking-[0.24em] text-[#F0EFE7]/80 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <span className="flex items-center gap-2 text-[#F0EFE7]">
+            <Sparkles className="w-3.5 h-3.5 text-[#B8A98F]" />
+            New arrivals just landed. Selected pieces now feature launch discounts.
+          </span>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-1 text-[#B8A98F] hover:text-[#F0EFE7] transition-colors font-semibold interactive"
+          >
+            Browse the new drop <ChevronRight className="w-3 h-3" />
+          </Link>
+        </div>
+      </div>
 
 
       <header 

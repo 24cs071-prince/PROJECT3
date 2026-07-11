@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { Product } from "@/lib/mockData";
 import { useStore } from "@/context/StoreContext";
 import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
+import { formatPrice, getMarkdownAmount, getMarkdownPercent } from "@/lib/priceUtils";
 
 interface ProductCardProps {
   product: Product;
@@ -29,10 +29,12 @@ const getMockSwatches = (id: string) => {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { toggleWishlist, isInWishlist } = useStore();
-  const [hovered, setHovered] = useState(false);
 
   const favorite = isInWishlist(product.id);
   const swatches = getMockSwatches(product.id);
+  const hasMarkdown = !!product.originalPrice && product.originalPrice > product.price;
+  const markdownPercent = hasMarkdown ? getMarkdownPercent(product.originalPrice!, product.price) : 0;
+  const markdownAmount = hasMarkdown ? getMarkdownAmount(product.originalPrice!, product.price) : 0;
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,8 +49,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
       className="group relative flex flex-col w-full bg-transparent border-none rounded-none overflow-hidden interactive"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       {/* Image Container with Zoom effect */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#1a1a1a] rounded-none">
@@ -80,6 +80,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Heart className={`w-3.5 h-3.5 ${favorite ? "fill-[#B8A98F] text-[#B8A98F]" : ""}`} />
         </button>
 
+        {hasMarkdown && markdownPercent > 0 && (
+          <div className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-full bg-[#B8A98F] text-[#0c0c0c] text-[8px] font-black tracking-[0.18em] uppercase shadow-lg">
+            Save {markdownPercent}%
+          </div>
+        )}
+
         {/* Size & Condition Badges (Top Left of Image) */}
         <div className="absolute top-3 left-3 z-20 flex flex-col gap-1.5 pointer-events-none">
           <span className={`text-[8px] font-bold tracking-wider uppercase px-2 py-0.5 bg-[#0c0c0c]/80 backdrop-blur-md border ${product.stock === 0 ? "text-red-400 border-red-500/20" : "text-[#F0EFE7] border-[#F0EFE7]/10"}`}>
@@ -104,9 +110,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           </h3>
         </Link>
         <div className="flex items-center justify-between mt-0.5">
-          <span className="text-[10px] font-semibold text-[#F0EFE7]/80">
-            ${product.price}
-          </span>
+          <div className="flex flex-col leading-tight">
+            <span className="text-[10px] font-semibold text-[#F0EFE7]/80">
+              ${formatPrice(product.price)}
+            </span>
+            {hasMarkdown && markdownAmount > 0 && (
+              <span className="text-[8px] uppercase tracking-widest text-[#B8A98F]/70 line-through">
+                ${formatPrice(product.originalPrice!)}
+              </span>
+            )}
+          </div>
           <span className="text-[8px] tracking-wider text-[#F0EFE7]/30 uppercase font-light">
             {product.categoryName}
           </span>

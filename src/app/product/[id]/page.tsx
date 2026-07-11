@@ -11,6 +11,7 @@ import ProductCard from "@/components/ProductCard";
 import { Star, ShieldCheck, Truck, RefreshCw, Plus, Heart, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { submitReviewAction } from "@/lib/actions";
+import { formatPrice, getMarkdownAmount, getMarkdownPercent } from "@/lib/priceUtils";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -268,18 +269,35 @@ export default function ProductDetail({ params }: ProductPageProps) {
               const adjusted = selectedSize ? getSizeAdjustedPrice(product.price, selectedSize) : product.price;
               const diff = selectedSize ? getSizePriceDiff(product.price, selectedSize) : 0;
               const badge = selectedSize ? getSizePriceBadge(product.price, selectedSize) : "";
+              const hasMarkdown = !!product.originalPrice && product.originalPrice > product.price;
+              const adjustedOriginal = hasMarkdown
+                ? (selectedSize ? getSizeAdjustedPrice(product.originalPrice, selectedSize) : product.originalPrice)
+                : null;
+              const markdownPercent = hasMarkdown && adjustedOriginal
+                ? getMarkdownPercent(adjustedOriginal, adjusted)
+                : 0;
+              const markdownAmount = hasMarkdown && adjustedOriginal
+                ? getMarkdownAmount(adjustedOriginal, adjusted)
+                : 0;
               return (
                 <div className="border-y border-[#F0EFE7]/10 py-4 flex items-center justify-between gap-4">
                   <div className="flex items-baseline gap-3">
-                    <span className="text-2xl font-bold text-[#F0EFE7]">
-                      ${adjusted.toFixed(2)}
-                    </span>
-                    {diff !== 0 && (
-                      <span className="text-sm text-[#F0EFE7]/40 line-through">
-                        ${product.price}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-2xl font-bold text-[#F0EFE7]">
+                        ${formatPrice(adjusted)}
                       </span>
-                    )}
+                      {hasMarkdown && adjustedOriginal && markdownAmount > 0 && (
+                        <span className="text-sm text-[#F0EFE7]/40 line-through">
+                          ${formatPrice(adjustedOriginal)}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  {hasMarkdown && markdownPercent > 0 && (
+                    <span className="text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border bg-[#B8A98F]/10 text-[#B8A98F] border-[#B8A98F]/30">
+                      Save {markdownPercent}%
+                    </span>
+                  )}
                   {badge && (
                     <span className={`text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border ${
                       diff > 0
@@ -291,7 +309,7 @@ export default function ProductDetail({ params }: ProductPageProps) {
                   )}
                   {!selectedSize && (
                     <span className="text-[9px] text-[#F0EFE7]/30 uppercase tracking-widest">
-                      Select size to see final price
+                      Select size to see final price and savings
                     </span>
                   )}
                 </div>

@@ -11,6 +11,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  originalPrice?: number;
   imageUrls: string[];
   categoryId: string;
   categoryName: string;
@@ -169,6 +170,7 @@ export const MOCK_PRODUCTS: Product[] = [
     name: "Lunar Eclipse Oversized Hoodie",
     description: "720GSM double-faced French terry hoodie in washed obsidian black. Embroidered 'LUNAR LUXE' arc text above a crescent moon graphic on the chest. Dropped shoulders, kangaroo pocket, and ribbed cuffs.",
     price: 175,
+    originalPrice: 219,
     imageUrls: [
       "https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80",
       "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&q=80"
@@ -219,6 +221,7 @@ export const MOCK_PRODUCTS: Product[] = [
     name: "Nova Luxe Washed Graphic Tee",
     description: "Boxy 230GSM heavyweight cotton tee with a distressed 'NOVA LUXE' sun-faded screen print across the back. Raw hem, pigment-dyed in charcoal, and finished with a crescent logo on the left sleeve.",
     price: 72,
+    originalPrice: 90,
     imageUrls: [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80",
       "https://images.unsplash.com/photo-1503341733017-1901578f9f1e?w=600&q=80"
@@ -269,6 +272,7 @@ export const MOCK_PRODUCTS: Product[] = [
     name: "Luxe Orbit Denim Jacket",
     description: "Reworked vintage denim trucker jacket overdyed in deep midnight indigo. Custom hand-embroidered crescent moons across the back yoke, tonal 'LUXE' lettering, and Lunar Luxe woven patch on the chest.",
     price: 195,
+    originalPrice: 235,
     imageUrls: [
       "https://images.unsplash.com/photo-1604644401890-0bd678c83788?w=600&q=80",
       "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80"
@@ -423,6 +427,7 @@ export const MOCK_PRODUCTS: Product[] = [
     name: "Luna Drift Slip Dress",
     description: "Bias-cut silk-touch slip dress in dusty silver-grey. Asymmetric hemline, adjustable crescent moon clasp straps, and a subtle tone-on-tone 'LUNA LUXE' embossed monogram at the back neckline.",
     price: 118,
+    originalPrice: 145,
     imageUrls: [
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80",
       "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80"
